@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Pencernaan Manusia - Media Pembelajaran Interaktif</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --coral:#FF6B5E;
+    --teal:#2FC1B4;
+    --yellow:#FFC93C;
+    --green:#5FD36B;
+    --cream:#FFF7EC;
+    --ink:#2D3142;
+    --purple:#8B6FE0;
+  }
+  *{font-family:'Nunito', sans-serif;}
+  h1,h2,h3,.font-display{font-family:'Fredoka', sans-serif;}
+  body{background-color:var(--cream); color:var(--ink);}
+  .bg-cream{background-color:var(--cream);}
+  .bg-coral{background-color:var(--coral);}
+  .bg-teal{background-color:var(--teal);}
+  .bg-yellow{background-color:var(--yellow);}
+  .bg-green{background-color:var(--green);}
+  .bg-purple{background-color:var(--purple);}
+  .text-coral{color:var(--coral);}
+  .text-teal{color:var(--teal);}
+  .border-coral{border-color:var(--coral);}
+
+  .page{display:none;}
+  .page.active{display:block; animation:fadeIn .4s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .nav-btn.active{background-color:var(--coral); color:white; box-shadow:0 4px 0 #d6493d;}
+  .nav-btn{transition:all .15s ease;}
+  .nav-btn:active{transform:translateY(2px);}
+
+  .level-tab.active{color:white; box-shadow:0 4px 0 rgba(0,0,0,.15) inset;}
+
+  .flip-card{perspective:1000px;}
+  .flip-inner{transition:transform .25s ease;}
+  .card-detail{display:none;}
+  .card-detail.open{display:block; animation:fadeIn .3s ease;}
+
+  .organ-card{transition:transform .2s ease, box-shadow .2s ease;}
+  .organ-card:hover{transform:translateY(-4px); box-shadow:0 10px 20px rgba(0,0,0,.08);}
+  .organ-card:active{transform:translateY(0px) scale(.98);}
+
+  .quiz-option{transition:all .15s ease;}
+  .quiz-option:active{transform:scale(.98);}
+  .quiz-option.correct{background-color:var(--green)!important; color:white; border-color:#3fa84c!important;}
+  .quiz-option.wrong{background-color:var(--coral)!important; color:white; border-color:#d6493d!important;}
+  .quiz-option.disabled{pointer-events:none; opacity:.7;}
+
+  @keyframes shake{
+    10%,90%{transform:translateX(-2px);}
+    20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-8px);}
+    40%,60%{transform:translateX(8px);}
+  }
+  .shake{animation:shake .5s;}
+
+  @keyframes pop{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+    100%{transform:scale(1);}
+  }
+  .pop{animation:pop .4s;}
+
+  .progress-bar-inner{transition:width .35s ease;}
+
+  .score-pill{transition:all .2s ease;}
+
+  .float-emoji{position:fixed; pointer-events:none; font-size:28px; z-index:60; animation:floatUp 1s ease forwards;}
+  @keyframes floatUp{
+    0%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-80px) scale(1.5);}
+  }
+
+  .badge-mudah{background-color:var(--green);}
+  .badge-sedang{background-color:var(--yellow);}
+  .badge-sulit{background-color:var(--coral);}
+
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-thumb{background:var(--teal); border-radius:10px;}
+
+  .img-fallback{display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--teal),var(--purple)); color:white; font-family:'Fredoka',sans-serif;}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- HEADER -->
+<header class="bg-white sticky top-0 z-50 shadow-md">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <img src="LOGO NEW.png" alt="Logo Sekolah" class="w-11 h-11 md:w-14 md:h-14 rounded-full object-cover border-2 border-coral flex-shrink-0" onerror="this.onerror=null; this.outerHTML='<div class=&quot;w-11 h-11 md:w-14 md:h-14 rounded-full img-fallback flex-shrink-0 text-lg font-bold&quot;>🩺</div>';">
+      <div>
+        <h1 class="font-display font-semibold text-base md:text-2xl text-coral leading-tight">Sistem Pencernaan Manusia</h1>
+        <p class="text-xs md:text-sm text-gray-500 font-semibold">Haryo Anggit Dwi Sasmito</p>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-1 bg-cream rounded-full px-2 py-1 text-xs md:text-sm font-bold text-teal">
+      <span>⭐</span><span>IPAS Kelas 5 SD</span>
+    </div>
+  </div>
+  <!-- NAV -->
+  <nav class="max-w-6xl mx-auto px-4 pb-3 flex gap-3">
+    <button id="navBelajar" onclick="goTo('belajar')" class="nav-btn active flex-1 py-2.5 rounded-2xl font-display font-semibold text-sm md:text-base border-2 border-coral text-coral bg-white flex items-center justify-center gap-2">
+      📚 Ruang Belajar
+    </button>
+    <button id="navKuis" onclick="goTo('kuis')" class="nav-btn flex-1 py-2.5 rounded-2xl font-display font-semibold text-sm md:text-base border-2 border-coral text-coral bg-white flex items-center justify-center gap-2">
+      🎮 Tantangan Kuis
+    </button>
+  </nav>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-6">
+
+  <!-- ================= PAGE: RUANG BELAJAR ================= -->
+  <section id="page-belajar" class="page active">
+    <div class="bg-white rounded-3xl p-5 md:p-8 shadow-md mb-6 border-4 border-yellow">
+      <h2 class="font-display text-xl md:text-3xl font-semibold text-coral mb-2">🚀 Petualangan Makanan dalam Tubuhmu!</h2>
+      <p class="text-sm md:text-base text-gray-600">Pilih tingkat materi yang ingin kamu pelajari, lalu ketuk kartu untuk membuka rahasia di dalamnya. Semakin sulit levelnya, semakin seru penjelasannya!</p>
+    </div>
+
+    <!-- LEVEL TABS -->
+    <div class="flex gap-2 md:gap-3 mb-6 overflow-x-auto pb-1">
+      <button onclick="setLevel('mudah')" id="tabMudah" class="level-tab active badge-mudah flex-shrink-0 px-4 md:px-6 py-2.5 rounded-2xl font-display font-semibold text-sm md:text-base text-white shadow">
+        🟢 Mudah
+      </button>
+      <button onclick="setLevel('sedang')" id="tabSedang" class="level-tab flex-shrink-0 px-4 md:px-6 py-2.5 rounded-2xl font-display font-semibold text-sm md:text-base text-gray-500 bg-white border-2 border-gray-200 shadow">
+        🟡 Sedang
+      </button>
+      <button onclick="setLevel('sulit')" id="tabSulit" class="level-tab flex-shrink-0 px-4 md:px-6 py-2.5 rounded-2xl font-display font-semibold text-sm md:text-base text-gray-500 bg-white border-2 border-gray-200 shadow">
+        🔴 Sulit
+      </button>
+    </div>
+
+    <div id="cardGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- ================= PAGE: KUIS ================= -->
+  <section id="page-kuis" class="page">
+
+    <!-- INTRO -->
+    <div id="quizIntro" class="bg-white rounded-3xl p-6 md:p-10 shadow-md text-center border-4 border-teal">
+      <div class="text-5xl mb-3">🏆</div>
+      <h2 class="font-display text-xl md:text-3xl font-semibold text-teal mb-2">Tantangan Kuis Pencernaan</h2>
+      <p class="text-sm md:text-base text-gray-600 mb-6">Jawab 10 soal pilihan ganda berikut untuk menguji pemahamanmu tentang sistem pencernaan manusia. Semangat, kamu pasti bisa! 💪</p>
+      <button onclick="startQuiz()" class="bg-coral text-white font-display font-semibold px-8 py-3 rounded-2xl shadow-[0_5px_0_#d6493d] hover:brightness-105 active:translate-y-1 active:shadow-none transition-all">
+        Mulai Kuis 🚀
+      </button>
+    </div>
+
+    <!-- QUIZ AREA -->
+    <div id="quizArea" class="hidden">
+      <div class="flex items-center justify-between mb-4 gap-3">
+        <div class="bg-white rounded-2xl px-4 py-2 shadow font-display font-semibold text-sm md:text-base text-gray-600">
+          Soal <span id="qNum">1</span>/10
+        </div>
+        <div id="scorePill" class="score-pill bg-yellow rounded-2xl px-4 py-2 shadow font-display font-semibold text-sm md:text-base text-white">
+          ⭐ Skor: <span id="scoreNum">0</span>
+        </div>
+      </div>
+      <div class="w-full bg-white rounded-full h-3 shadow-inner mb-6 overflow-hidden">
+        <div id="progressBar" class="progress-bar-inner bg-teal h-3 rounded-full" style="width:10%"></div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-5 md:p-8 shadow-md border-4 border-purple" id="questionCard">
+        <h3 id="questionText" class="font-display text-base md:text-xl font-semibold mb-5 text-ink">Pertanyaan</h3>
+        <div id="optionsWrap" class="grid grid-cols-1 gap-3"></div>
+        <div id="feedbackBox" class="hidden mt-4 p-4 rounded-2xl text-sm md:text-base font-semibold"></div>
+      </div>
+
+      <div class="text-center mt-5">
+        <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-teal text-white font-display font-semibold px-8 py-3 rounded-2xl shadow-[0_5px_0_#1f8f85] hover:brightness-105 active:translate-y-1 active:shadow-none transition-all">
+          Lanjut ➡️
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="quizResult" class="hidden bg-white rounded-3xl p-6 md:p-10 shadow-md text-center border-4 border-yellow">
+      <div id="resultEmoji" class="text-6xl mb-3">🎉</div>
+      <h2 class="font-display text-xl md:text-3xl font-semibold text-coral mb-2">Kuis Selesai!</h2>
+      <p id="resultMsg" class="text-sm md:text-base text-gray-600 mb-3"></p>
+      <div class="text-4xl md:text-5xl font-display font-semibold text-teal mb-6">
+        <span id="finalScore">0</span>/100
+      </div>
+      <button onclick="resetQuiz()" class="bg-coral text-white font-display font-semibold px-8 py-3 rounded-2xl shadow-[0_5px_0_#d6493d] hover:brightness-105 active:translate-y-1 active:shadow-none transition-all">
+        🔄 Main Lagi
+      </button>
+    </div>
+
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-white border-t-4 border-coral mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
+    <img src="foto.jpg" alt="Foto Pengembang" class="w-14 h-14 rounded-full object-cover border-2 border-teal flex-shrink-0" onerror="this.onerror=null; this.outerHTML='<div class=&quot;w-14 h-14 rounded-full img-fallback flex-shrink-0 text-xl font-bold&quot;>👨‍🏫</div>';">
+    <div>
+      <p class="font-display font-semibold text-sm md:text-base text-ink">Dikembangkan oleh: Haryo Anggit Dwi Sasmito</p>
+      <p class="text-xs text-gray-400">Media Pembelajaran Interaktif IPAS &mdash; Sistem Pencernaan Manusia &copy; 2026</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ======================= NAVIGASI SPA ======================= */
+function goTo(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+pageId).classList.add('active');
+  document.getElementById('navBelajar').classList.toggle('active', pageId==='belajar');
+  document.getElementById('navKuis').classList.toggle('active', pageId==='kuis');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ======================= DATA MATERI ======================= */
+const materiData = {
+  mudah: [
+    {emoji:'👄', title:'Mulut', desc:'Pintu gerbang masuknya makanan.', detail:'Di mulut, makanan dikunyah oleh gigi menjadi potongan kecil dan dibasahi oleh air liur agar mudah ditelan. Proses ini disebut pencernaan mekanis.', contoh:'Saat kamu makan nasi, gigi mengunyahnya sampai halus sebelum ditelan ke kerongkongan.'},
+    {emoji:'🥤', title:'Kerongkongan', desc:'Saluran penghubung mulut dan lambung.', detail:'Kerongkongan (esofagus) adalah saluran panjang berbentuk pipa yang mendorong makanan dari mulut menuju lambung dengan gerakan meremas.', contoh:'Ketika kamu menelan air minum, air itu meluncur melalui kerongkongan menuju lambung dalam hitungan detik.'},
+    {emoji:'🫃', title:'Lambung', desc:'Kantong yang mengolah makanan menjadi bubur.', detail:'Lambung mengaduk dan mencampur makanan dengan cairan asam sehingga makanan berubah menjadi bubur (kim) yang siap diproses lebih lanjut.', contoh:'Setelah makan bakso, makanan di lambungmu diaduk-aduk seperti diblender selama beberapa jam.'},
+    {emoji:'🌀', title:'Usus Halus', desc:'Tempat penyerapan sari makanan.', detail:'Usus halus adalah organ terpanjang dalam sistem pencernaan. Di sinilah sari-sari makanan diserap masuk ke pembuluh darah untuk memberi energi ke tubuh.', contoh:'Vitamin dan gula dari buah yang kamu makan diserap di usus halus lalu dibawa ke seluruh tubuh.'},
+    {emoji:'🌾', title:'Usus Besar', desc:'Menyerap air dan membentuk sisa makanan.', detail:'Usus besar menyerap sisa air dari makanan yang tidak tercerna, lalu membentuk sisa makanan menjadi kotoran (feses).', contoh:'Jika kamu kurang minum air putih, feses di usus besar bisa menjadi keras sehingga susah dikeluarkan.'},
+    {emoji:'🚪', title:'Anus', desc:'Pintu keluar sisa makanan.', detail:'Anus adalah lubang di ujung saluran pencernaan tempat feses dikeluarkan dari tubuh melalui proses buang air besar.', contoh:'Setelah semua proses pencernaan selesai, sisa makanan dikeluarkan tubuh melalui anus saat kamu ke toilet.'},
+  ],
+  sedang: [
+    {emoji:'🧪', title:'Enzim Pencernaan', desc:'Zat pemecah makanan menjadi molekul kecil.', detail:'Enzim ptialin (amilase) di air liur memecah karbohidrat, pepsin di lambung memecah protein, dan lipase membantu mencerna lemak. Enzim mempercepat proses pencernaan kimiawi.', contoh:'Coba kunyah nasi lama-lama, lama-kelamaan terasa manis karena enzim ptialin mengubah karbohidrat menjadi gula sederhana.'},
+    {emoji:'🫀', title:'Peran Hati', desc:'Pabrik cairan empedu tubuh.', detail:'Hati menghasilkan cairan empedu yang berfungsi memecah lemak menjadi butiran kecil agar lebih mudah dicerna oleh enzim lipase di usus halus.', contoh:'Ketika kamu makan gorengan, empedu dari hati membantu memecah minyak/lemak dalam makanan itu.'},
+    {emoji:'🧫', title:'Peran Pankreas', desc:'Penghasil enzim penting untuk usus halus.', detail:'Pankreas menghasilkan berbagai enzim pencernaan dan mengalirkannya ke usus halus untuk membantu mencerna karbohidrat, protein, dan lemak secara sempurna.', contoh:'Enzim dari pankreas membantu mengubah protein telur yang kamu makan menjadi asam amino yang bisa diserap tubuh.'},
+    {emoji:'💧', title:'Penyerapan di Usus Halus', desc:'Proses masuknya sari makanan ke darah.', detail:'Dinding usus halus memiliki jonjot-jonjot kecil (vili) yang memperluas permukaan penyerapan, sehingga sari makanan dapat diserap secara maksimal ke pembuluh darah.', contoh:'Zat besi dari sayur bayam yang kamu makan diserap oleh vili usus halus lalu dibawa darah ke seluruh tubuh.'},
+    {emoji:'🦠', title:'Usus Besar & Bakteri Baik', desc:'Rumah bagi bakteri yang membantu pencernaan.', detail:'Usus besar mengandung bakteri baik (mikroba usus) yang membantu membusukkan sisa makanan dan menghasilkan beberapa vitamin, seperti vitamin K.', contoh:'Yogurt yang kamu minum mengandung bakteri baik yang bisa menambah jumlah bakteri baik di usus besarmu.'},
+    {emoji:'🌊', title:'Gerak Peristaltik', desc:'Gerakan otot yang mendorong makanan.', detail:'Gerak peristaltik adalah gerakan meremas dan mendorong yang dilakukan otot-otot saluran pencernaan agar makanan bergerak maju dari mulut hingga anus.', contoh:'Karena ada gerak peristaltik, kamu tetap bisa menelan makanan meskipun sedang berbaring atau bahkan berdiri terbalik.'},
+  ],
+  sulit: [
+    {emoji:'🔥', title:'Maag (Gastritis)', desc:'Radang pada dinding lambung.', detail:'Maag terjadi ketika produksi asam lambung berlebihan atau pola makan tidak teratur, sehingga dinding lambung mengalami iritasi dan menimbulkan rasa nyeri.', contoh:'Jika kamu sering telat makan atau makan makanan pedas berlebihan, lambungmu bisa terasa perih akibat maag.'},
+    {emoji:'💦', title:'Diare', desc:'Gangguan buang air besar terlalu cair.', detail:'Diare terjadi ketika usus besar tidak sempat menyerap air dengan baik, biasanya akibat infeksi kuman dari makanan atau minuman yang tidak bersih.', contoh:'Makan makanan yang tidak higienis di pinggir jalan bisa menyebabkan seseorang mengalami diare.'},
+    {emoji:'🪨', title:'Sembelit (Konstipasi)', desc:'Sulit buang air besar.', detail:'Sembelit terjadi karena kurang serat dan air, sehingga feses menjadi keras dan sulit dikeluarkan oleh usus besar.', contoh:'Anak yang jarang makan sayur dan buah lebih mudah mengalami sembelit dibanding yang rajin makan serat.'},
+    {emoji:'🩹', title:'Tukak Lambung', desc:'Luka pada dinding lambung atau usus.', detail:'Tukak lambung adalah luka terbuka pada lapisan lambung akibat asam lambung yang mengikis dinding lambung dalam waktu lama, sering disebabkan pola makan tidak sehat.', contoh:'Kebiasaan menahan lapar terlalu lama secara terus-menerus dapat meningkatkan risiko tukak lambung saat dewasa.'},
+    {emoji:'🥦', title:'Menjaga Kesehatan Pencernaan', desc:'Kebiasaan baik untuk saluran cerna.', detail:'Menjaga kesehatan pencernaan dilakukan dengan makan makanan berserat, minum air putih cukup, makan teratur, mengunyah perlahan, dan rutin berolahraga.', contoh:'Membiasakan sarapan dengan buah dan sayur setiap pagi adalah salah satu cara menjaga kesehatan pencernaanmu.'},
+    {emoji:'🔗', title:'Keterkaitan dengan Sistem Lain', desc:'Pencernaan bekerja sama dengan sistem tubuh lain.', detail:'Sari makanan yang diserap usus halus akan diedarkan oleh sistem peredaran darah ke seluruh tubuh, sehingga sistem pencernaan dan peredaran darah saling bekerja sama menjaga tubuh tetap berenergi.', contoh:'Setelah makan buah pisang, zat gizinya diserap usus lalu dialirkan darah menuju otot agar kamu punya tenaga untuk berlari.'},
+  ]
+};
+
+let currentLevel='mudah';
+function setLevel(level){
+  currentLevel=level;
+  ['Mudah','Sedang','Sulit'].forEach(l=>{
+    const btn=document.getElementById('tab'+l);
+    btn.classList.remove('active');
+    btn.classList.add('bg-white','text-gray-500','border-2','border-gray-200');
+  });
+  const activeBtn=document.getElementById('tab'+level.charAt(0).toUpperCase()+level.slice(1));
+  activeBtn.classList.add('active');
+  activeBtn.classList.remove('bg-white','text-gray-500','border-2','border-gray-200');
+  renderCards();
+}
+
+function renderCards(){
+  const grid=document.getElementById('cardGrid');
+  grid.innerHTML='';
+  materiData[currentLevel].forEach((item,idx)=>{
+    const cardId=`card-${currentLevel}-${idx}`;
+    const card=document.createElement('div');
+    card.className='organ-card bg-white rounded-3xl p-5 shadow-md border-2 border-gray-100 cursor-pointer';
+    card.onclick=()=>toggleCard(cardId);
+    card.innerHTML=`
+      <div class="flex items-center gap-3 mb-2">
+        <div class="text-4xl">${item.emoji}</div>
+        <div>
+          <h3 class="font-display font-semibold text-base md:text-lg text-ink">${item.title}</h3>
+          <p class="text-xs md:text-sm text-gray-500">${item.desc}</p>
+        </div>
+      </div>
+      <p class="text-xs text-teal font-semibold mt-2">👉 Ketuk untuk lihat penjelasan</p>
+      <div id="${cardId}" class="card-detail mt-3 pt-3 border-t-2 border-dashed border-gray-200">
+        <p class="text-sm text-gray-700 mb-2"><span class="font-semibold text-coral">Penjelasan:</span> ${item.detail}</p>
+        <p class="text-sm text-gray-700 bg-cream rounded-xl p-3"><span class="font-semibold text-teal">Contoh:</span> ${item.contoh}</p>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+function toggleCard(id){
+  document.getElementById(id).classList.toggle('open');
+}
+renderCards();
+
+/* ======================= QUIZ ======================= */
+const quizData = [
+  {q:'Organ pertama yang mencerna makanan secara mekanis (dikunyah) adalah...', opts:['Mulut','Lambung','Usus halus','Kerongkongan'], correct:0, exp:'Di mulut, gigi mengunyah makanan menjadi potongan kecil sebagai awal proses pencernaan.'},
+  {q:'Enzim dalam air liur yang membantu mencerna karbohidrat disebut...', opts:['Pepsin','Ptialin (amilase)','Lipase','Renin'], correct:1, exp:'Ptialin (amilase) memecah karbohidrat menjadi gula sederhana sejak di mulut.'},
+  {q:'Gerakan meremas dan mendorong makanan di sepanjang saluran pencernaan disebut...', opts:['Peristaltik','Refleks','Kontraksi otot','Absorpsi'], correct:0, exp:'Gerak peristaltik mendorong makanan agar terus bergerak maju dalam saluran pencernaan.'},
+  {q:'Cairan asam yang dihasilkan lambung untuk membunuh kuman pada makanan adalah...', opts:['Air liur','Asam klorida (HCl)','Empedu','Air ludah'], correct:1, exp:'Asam klorida (HCl) di lambung berfungsi membunuh kuman sekaligus membantu mencerna makanan.'},
+  {q:'Penyerapan sari-sari makanan paling banyak terjadi di organ...', opts:['Lambung','Usus besar','Usus halus','Kerongkongan'], correct:2, exp:'Usus halus memiliki jonjot (vili) yang menyerap sari makanan ke dalam darah.'},
+  {q:'Organ yang menyerap sisa air dan membentuk feses adalah...', opts:['Usus halus','Usus besar','Lambung','Hati'], correct:1, exp:'Usus besar menyerap sisa air sehingga sisa makanan menjadi padat berbentuk feses.'},
+  {q:'Cairan empedu yang membantu mencerna lemak dihasilkan oleh organ...', opts:['Pankreas','Ginjal','Hati','Limpa'], correct:2, exp:'Hati menghasilkan cairan empedu untuk memecah lemak menjadi butiran kecil.'},
+  {q:'Gangguan pada lambung akibat produksi asam lambung berlebih disebut...', opts:['Diare','Maag','Sembelit','Anemia'], correct:1, exp:'Maag (gastritis) terjadi karena asam lambung berlebih mengiritasi dinding lambung.'},
+  {q:'Berikut ini adalah cara menjaga kesehatan pencernaan, kecuali...', opts:['Makan makanan berserat','Minum air putih cukup','Makan tergesa-gesa','Makan secara teratur'], correct:2, exp:'Makan tergesa-gesa dapat mengganggu proses pencernaan, sebaiknya makan perlahan dan dikunyah hingga halus.'},
+  {q:'Urutan organ pencernaan manusia yang benar adalah...', opts:['Mulut - Lambung - Kerongkongan - Usus halus - Usus besar','Mulut - Kerongkongan - Lambung - Usus halus - Usus besar','Mulut - Usus halus - Lambung - Kerongkongan - Usus besar','Mulut - Kerongkongan - Usus besar - Lambung - Usus halus'], correct:1, exp:'Urutan yang benar: Mulut → Kerongkongan → Lambung → Usus Halus → Usus Besar → Anus.'},
+];
+
+let quizIndex=0;
+let score=0;
+let answered=false;
+
+function startQuiz(){
+  quizIndex=0; score=0; answered=false;
+  document.getElementById('quizIntro').classList.add('hidden');
+  document.getElementById('quizResult').classList.add('hidden');
+  document.getElementById('quizArea').classList.remove('hidden');
+  updateScorePill();
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered=false;
+  const item=quizData[quizIndex];
+  document.getElementById('qNum').textContent=quizIndex+1;
+  document.getElementById('progressBar').style.width = ((quizIndex+1)/quizData.length*100)+'%';
+  document.getElementById('questionText').textContent = item.q;
+  document.getElementById('feedbackBox').classList.add('hidden');
+  document.getElementById('nextBtn').classList.add('hidden');
+
+  const wrap=document.getElementById('optionsWrap');
+  wrap.innerHTML='';
+  const letters=['A','B','C','D'];
+  item.opts.forEach((opt,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-option text-left bg-cream border-2 border-gray-200 rounded-2xl px-4 py-3 font-semibold text-sm md:text-base flex items-center gap-3';
+    btn.innerHTML=`<span class="bg-white rounded-full w-7 h-7 flex items-center justify-center text-xs font-bold text-teal border-2 border-teal flex-shrink-0">${letters[idx]}</span><span>${opt}</span>`;
+    btn.onclick=(e)=>selectAnswer(idx, btn, e);
+    wrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx, btnEl, e){
+  if(answered) return;
+  answered=true;
+  const item=quizData[quizIndex];
+  const allBtns=document.querySelectorAll('#optionsWrap .quiz-option');
+  allBtns.forEach(b=>b.classList.add('disabled'));
+
+  const feedback=document.getElementById('feedbackBox');
+  feedback.classList.remove('hidden');
+
+  if(idx===item.correct){
+    btnEl.classList.add('correct','pop');
+    score+=10;
+    updateScorePill();
+    feedback.className='mt-4 p-4 rounded-2xl text-sm md:text-base font-semibold bg-green bg-opacity-15 text-green border-2 border-green';
+    feedback.innerHTML = `✅ <span class="font-display">Benar!</span> ${item.exp}`;
+    spawnEmoji(e, '🎉');
+  } else {
+    btnEl.classList.add('wrong','shake');
+    allBtns[item.correct].classList.add('correct');
+    feedback.className='mt-4 p-4 rounded-2xl text-sm md:text-base font-semibold bg-coral bg-opacity-15 text-coral border-2 border-coral';
+    feedback.innerHTML = `❌ <span class="font-display">Belum tepat.</span> ${item.exp}`;
+    spawnEmoji(e, '💦');
+  }
+
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function spawnEmoji(e, emoji){
+  if(!e) return;
+  const span=document.createElement('span');
+  span.className='float-emoji';
+  span.textContent=emoji;
+  const rect = e.target.closest('button')?.getBoundingClientRect();
+  span.style.left = (rect ? rect.left + rect.width/2 : window.innerWidth/2) + 'px';
+  span.style.top = (rect ? rect.top : window.innerHeight/2) + 'px';
+  document.body.appendChild(span);
+  setTimeout(()=>span.remove(), 1000);
+}
+
+function updateScorePill(){
+  const el=document.getElementById('scoreNum');
+  el.textContent=score;
+  const pill=document.getElementById('scorePill');
+  pill.classList.add('pop');
+  setTimeout(()=>pill.classList.remove('pop'), 400);
+}
+
+function nextQuestion(){
+  quizIndex++;
+  if(quizIndex>=quizData.length){
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult(){
+  document.getElementById('quizArea').classList.add('hidden');
+  document.getElementById('quizResult').classList.remove('hidden');
+  document.getElementById('finalScore').textContent=score;
+
+  let msg='', emoji='';
+  if(score>=90){ msg='Luar biasa! Kamu benar-benar paham sistem pencernaan manusia! 🌟'; emoji='🏆'; }
+  else if(score>=70){ msg='Kerja bagus! Pemahamanmu sudah cukup baik, tetap semangat belajar!'; emoji='🎉'; }
+  else if(score>=50){ msg='Cukup baik! Yuk baca lagi Ruang Belajar supaya makin paham.'; emoji='💪'; }
+  else{ msg='Ayo coba lagi! Kunjungi Ruang Belajar dulu, lalu tantang dirimu sekali lagi.'; emoji='📚'; }
+  document.getElementById('resultMsg').textContent=msg;
+  document.getElementById('resultEmoji').textContent=emoji;
+}
+
+function resetQuiz(){
+  document.getElementById('quizResult').classList.add('hidden');
+  document.getElementById('quizIntro').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
